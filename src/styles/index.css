@@ -47,3 +47,46 @@ img, canvas, svg { max-width: 100%; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 .bump { animation: bump .6s cubic-bezier(.22,1,.36,1); }
 @keyframes bump { 0% { transform: scale(1); } 35% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+/* "Your 15" celebration: six different entrances, transform + opacity only */
+.celeb-grid { perspective: 700px; }
+.cj { animation-duration: .6s; animation-timing-function: cubic-bezier(.22,1,.36,1); animation-fill-mode: backwards; }
+.cj0 { animation-name: cjPop; }
+.cj1 { animation-name: cjLeft; }
+.cj2 { animation-name: cjRight; }
+.cj3 { animation-name: cjDrop; }
+.cj4 { animation-name: cjFlip; }
+.cj5 { animation-name: cjRise; }
+@keyframes cjPop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+@keyframes cjLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: none; } }
+@keyframes cjRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+@keyframes cjDrop { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: none; } }
+@keyframes cjFlip { from { opacity: 0; transform: rotateY(70deg); } to { opacity: 1; transform: none; } }
+@keyframes cjRise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+.reveal-item { opacity: 0; }
+.revealed .reveal-item { opacity: 1; animation: cjPop .6s cubic-bezier(.22,1,.36,1) backwards; animation-delay: var(--d, 0s); }
+.revealed .reveal-item:nth-child(6n+2) { animation-name: cjLeft; }
+.revealed .reveal-item:nth-child(6n+3) { animation-name: cjRight; }
+.revealed .reveal-item:nth-child(6n+4) { animation-name: cjDrop; }
+.revealed .reveal-item:nth-child(6n+5) { animation-name: cjFlip; }
+.revealed .reveal-item:nth-child(6n+6) { animation-name: cjRise; }
+/* Picking a player: the card bounces and the tick pops */
+.sel-bounce { animation: selBounce .4s cubic-bezier(.22,1,.36,1); }
+@keyframes selBounce { 0% { transform: scale(.94); } 55% { transform: scale(1.03); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .reveal-item { opacity: 1 !important; } }
+
+/* Full-screen message screens (login result): glow blobs, pulsing rings, burst dots, shaking icon */
+.msg-bg { background: radial-gradient(420px 360px at 15% 12%, rgba(15,82,186,.55), transparent 70%), radial-gradient(380px 320px at 90% 85%, rgba(255,153,51,.22), transparent 70%), radial-gradient(360px 300px at 20% 95%, rgba(19,136,8,.25), transparent 70%), #050d1f; }
+.ring { position: absolute; inset: 0; border-radius: 9999px; border: 2px solid currentColor; animation: ring 1.8s ease-out infinite; }
+.ring2 { animation-delay: .6s; } .ring3 { animation-delay: 1.2s; }
+@keyframes ring { from { transform: scale(.9); opacity: .7; } to { transform: scale(2.1); opacity: 0; } }
+.wobble { animation: wobble 1.2s ease-in-out .3s 2; }
+@keyframes wobble { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-14deg); } 40% { transform: rotate(12deg); } 60% { transform: rotate(-8deg); } 80% { transform: rotate(5deg); } }
+.dot { position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; border-radius: 9999px; animation: burst 1s cubic-bezier(.2,.8,.3,1) .35s both; }
+@keyframes burst { from { opacity: 1; transform: translate(-50%,-50%) scale(.4); } to { opacity: 0; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1); } }
+.float { animation: floaty 2.4s ease-in-out infinite alternate; }
+@keyframes floaty { to { transform: translateY(-6px); } }
+.shine { position: relative; overflow: hidden; }
+.shine::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.25) 50%, transparent 65%); transform: translateX(-120%); animation: shine 2.4s ease-in-out 1s infinite; }
+@keyframes shine { to { transform: translateX(120%); } }
