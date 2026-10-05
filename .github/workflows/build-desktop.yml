@@ -1,0 +1,87 @@
+name: Build Desktop App (Windows, Mac, Linux)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            script: dist:win
+            artifact: india-2027-squad-windows
+            files: |
+              desktop/release/*.exe
+          - os: macos-latest
+            script: dist:mac
+            artifact: india-2027-squad-mac
+            files: |
+              desktop/release/*.dmg
+              desktop/release/*.zip
+          - os: ubuntu-latest
+            script: dist:linux
+            artifact: india-2027-squad-linux
+            files: |
+              desktop/release/*.AppImage
+              desktop/release/*.deb
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install web app dependencies
+        run: npm install
+
+      - name: Build the web app
+        run: npx vite build --base=./
+
+      - name: Copy the built web app into the desktop shell
+        shell: bash
+        run: |
+          rm -rf desktop/app
+          cp -r dist desktop/app
+
+      - name: Install desktop dependencies
+        working-directory: desktop
+        run: npm install
+
+      - name: Package the desktop app
+        working-directory: desktop
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: npm run ${{ matrix.script }}
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.files }}
+
+  # Puts every installer on one download page: repo > Releases > "Desktop apps (latest)"
+  release:
+    needs: desktop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: installers
+          merge-multiple: true
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          ls -la installers
+          gh release delete desktop-latest --yes --cleanup-tag || true
+          gh release create desktop-latest installers/* --title "Desktop apps (latest)" --notes "Windows (.exe), Mac (.dmg) and Linux (.AppImage / .deb) builds of India 2027 Squad Lab." --target "${{ github.sha }}"
