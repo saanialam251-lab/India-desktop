@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    @apply font-poppins text-white min-h-screen antialiased;
+  background: #050d1f;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.field {
+  @apply w-full bg-white/[.06] border border-white/10 rounded-xl px-4 py-3 text-sm placeholder:text-white/40 outline-none transition focus:border-[#FF9933]/70 focus:bg-white/10;
+}
+
+.tricolour {
+  background: linear-gradient(90deg, #FF9933 0 33.3%, #ffffff 33.3% 66.6%, #138808 66.6%);
+}
+
+:focus-visible { outline: 2px solid #FF9933; outline-offset: 2px; }
+
+.scroll-thin { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.2) transparent; }
+/* Android app: keep content below the status bar and above the gesture bar */
+body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+
+/* No sideways scrolling, vertical scroll only */
+html, body { max-width: 100%; overflow-x: clip; overscroll-behavior-x: none; }
+body { touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
+img, canvas, svg { max-width: 100%; }
+/* Cheap animations: transform + opacity only */
+.rise { animation: rise .5s cubic-bezier(.22,1,.36,1) both; }
+.grow { transform-origin: left; animation: grow .9s cubic-bezier(.22,1,.36,1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes grow { from { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* Pop-ups: CSS-only (no JavaScript animation, no exit animation) so they open and close instantly */
+.fade-in { animation: fadeIn .12s ease-out both; }
+.pop-in { animation: popIn .16s ease-out both; }
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes popIn { from { opacity: 0; transform: scale(.96); } }
+.draw { stroke-dasharray: 200; stroke-dashoffset: 200; animation: draw .45s ease-out forwards; }
+.draw2 { animation-delay: .3s; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.bump { animation: bump .6s cubic-bezier(.22,1,.36,1); }
+@keyframes bump { 0% { transform: scale(1); } 35% { transform: scale(1.18); } 100% { transform: scale(1); } }
