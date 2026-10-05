@@ -1,0 +1,60 @@
+{
+  "name": "india-2027-squad-desktop",
+  "productName": "India 2027 Squad Lab",
+  "version": "1.0.0",
+  "description": "India 2027 \u2013 The Blue Army Squad Lab (desktop app)",
+  "author": {
+    "name": "India 2027 Squad Lab",
+    "email": "squadlab@example.com"
+  },
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win --x64 --publish never",
+    "dist:mac": "electron-builder --mac --x64 --arm64 --publish never",
+    "dist:linux": "electron-builder --linux --publish never"
+  },
+  "devDependencies": {
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.india2027.squadlab.desktop",
+    "productName": "India 2027 Squad Lab",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "app/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.sports"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Game",
+      "maintainer": "India 2027 Squad Lab <squadlab@example.com>"
+    }
+  },
+  "homepage": "https://github.com/saanialam251-lab/India_2027_World-Cup"
+}
